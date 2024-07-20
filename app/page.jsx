@@ -16,9 +16,8 @@ export default function HomePage() {
                 <div className='flex gap-7'>
                     <Tarjeta name='Samuel Aquima'/>
                     <Tarjeta name='William Vargas'/>
-                    <Tarjeta name='Erick Barreda'/>
-                    <Tarjeta name='Jeferson Espejo'/>
-                    <Tarjeta name='Richard Choqueza'/>
+                    <Tarjeta name='Ericks Barreda'/>
+                    <Tarjeta name='Jhon Mamani'/>
                 </div>
             </div>
         </div>

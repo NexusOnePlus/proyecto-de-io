@@ -1,5 +1,5 @@
 import Sidebar from "@/components/Sidebar";
-
+import {AppWrapper} from './context.jsx'
 export const metadata = {
   title: 'Programacion Lineal',
   description: 'Metodo lineal usando las metodos simplex, dual, grafico, gran M y dos fases',
@@ -10,6 +10,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return <div className="grid grid-cols-[1fr_4fr]">
             <Sidebar/>
+            <AppWrapper>
             {children}
+            </AppWrapper>
         </div>
 }
