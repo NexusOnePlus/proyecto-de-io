@@ -8,7 +8,7 @@ export default function Lineal() {
     const { data, setData } = useData()
     useEffect(() => {
         if (data.submatriz.length !== data.restricciones+1 || data.submatriz[0].length !== data.variables+2) {
-            setData({ ...data, submatriz: Array.from({ length: data.restricciones+1 }, () => Array.from({ length: data.variables+2 }, () => '')) })
+            setData({ ...data, submatriz: Array.from({ length: data.restricciones+1 }, () => Array.from({ length: data.variables+2 }, (v,i) => i == data.variables ? '<=' : '')) })
         }
     }, [data.variables, data.restricciones])
 
@@ -19,11 +19,11 @@ export default function Lineal() {
     }
 
     const options = [
+        {label: '<=', value:  '<='},
+        {label: '>=', value:  '>='},
+        {label: '=', value:  '='},
         {label: '<', value:  '<'},
         {label: '>', value:  '>'},
-        {label: '=', value:  '='},
-        {label: '>=', value:  '>='},
-        {label: '<=', value:  '<='},
     ]
 
 
@@ -84,13 +84,15 @@ export default function Lineal() {
                     ))
                     }
                 </div>
-                <div className="grid place-items-center p-2 gap-y-2">
+                <div className="grid place-items-start p-2 gap-y-2">
                     {
                         data.submatriz.map((a, b) => (
                             <div className="text-white flex gap-2 content-center" key={b}>
                                 <div className="w-[100px]"> {b != 0 ? `Restriccion ${b}` : 'Funcion'} </div>
                                 {
-                                    a.map((d, i) => (
+                                    a.map((d, i) => { 
+                                        return b == 0 && (i == data.variables || i == data.variables+1) ? null
+                                        : (
                                         <div key={i} className={`bg-neutral-900 grid place-items-center w-20 h-8 border-2 ${i == data.variables ? 'border-cyan-400' : 'border-white'} rounded`}>
                                             {i != data.variables ? (<input type="text" value={d} className="appearance-none w-full bg-transparent rounded px-3 focus:outline-none" onChange={(e) => handleChange(b, i, e)}/>) 
                                             : <select className="appearance-none w-full bg-transparent rounded px-3 focus:outline-none" value={d} onChange={(e) => handleChange(b, i, e)}>
@@ -100,7 +102,8 @@ export default function Lineal() {
                                                 }
                                                 </select>}
                                         </div>
-                                    ))
+                                    )
+                                })
                                 }</div>
                         ))
                     }
