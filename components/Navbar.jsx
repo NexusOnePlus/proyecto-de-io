@@ -21,7 +21,10 @@ export default function Navbar() {
           <Link href='/enteros'> Programacion entera </Link>
         </li>
         <li>
-          <Link href='/rutas'> Problemas de transporte </Link>
+          <Link href='/rutas'> Transporte </Link>
+        </li>
+        <li>
+          <Link href='/grafos'> Grafos </Link>
         </li>
       </ul>
       <h1>Acerca</h1>
