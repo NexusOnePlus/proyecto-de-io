@@ -1,9 +1,9 @@
-import Sidebar from "@/components/Sidebar2";
+import Sidebar from "@/components/Sidebar3";
 import {AppWrapper} from './context.jsx'
 export const metadata = {
-  title: 'Programacion Lineal Entera',
-  description: 'Metodo Entero usando las metodos de ramificacion y acotacion',
-  keywords: 'proyecto, io, programacion, entera, ramificacion, acotacion, otros',
+  title: 'Transpote',
+  description: 'Problemas de transporte usando algoritmos aprox de Vogel, entre otros',
+  keywords: 'proyecto, io, programacion, transporte, vogel, otros',
   applicationName: 'I.O.',
 }
 

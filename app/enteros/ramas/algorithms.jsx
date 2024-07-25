@@ -124,3 +124,8 @@ export const simplex = (matriz) => {
         log.unshift(barra)
     return getVariableValues(log)
 }
+
+
+export const m = (matriz) => {
+    
+}

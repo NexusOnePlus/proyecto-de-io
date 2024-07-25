@@ -4,7 +4,7 @@ import Boton from "@/components/Boton"
 import { useData } from "./context"
 import { useEffect } from "react"
 
-export default function Lineal() {
+export default function Entera() {
     const { data, setData } = useData()
     useEffect(() => {
         if (data.submatriz.length !== data.restricciones+1 || data.submatriz[0].length !== data.variables+2) {
