@@ -119,14 +119,37 @@ export default function Vogel() {
     const { data, setData } = useData()
     const [legal, setLegal] = useState(false);
     const [info, setInfo] = useState({})
-
+    const [nao, setNao] = useState(true)
     useEffect(() => {
         let condition = true;
         setLegal(true)
     }, [])
 
     useEffect(() => {
-        if (legal) {
+        let mm = true;
+        let row = 0, col = 0;
+        data.submatriz.map((a,b) => {
+            a.map((c,d) => {
+                if(c == ''){
+                    if (b != (data.submatriz.length-1)) {
+                        mm = false;
+                    } else if (d != (a.length-1)) {
+                        mm = false;
+                    }
+                }
+                if (d == a.length-1) {
+                    row = row + (c == '' ? 0 : parseFloat(c));
+                }
+                if (b == data.submatriz.length-1) {
+                    col = col + (c == '' ? 0 : parseFloat(c));
+                }
+            })
+        })
+        if (row != col) {
+            mm = false;
+        }
+        setNao(mm);
+        if (legal && mm) {
             let supply = []
             let demand = []
             let grid = data.submatriz.map((a, b) => {
@@ -175,14 +198,13 @@ export default function Vogel() {
                 <div className="rounded-md border-2  border-slate-600 bg-slate-600 p-[0.5px] w-full">
                     <div className="flex">
                         <span className="w-24"></span>
-                    {data.submatriz[0].map((row, rowIndex) => (
-                        <div key={rowIndex} className="flex">
-                            <span className={` grid place-items-center border-slate-500 w-24 p-2 overflow-auto`}> {rowIndex == data.submatriz[0].length-1 ? 'Oferta' : `Destino ${rowIndex+1}`} </span>
-                        </div>
-                    ))}
-                </div>
+                        {data.submatriz[0].map((row, rowIndex) => (
+                            <div key={rowIndex} className="flex">
+                                <span className={` grid place-items-center border-slate-500 w-24 p-2 overflow-auto`}> {rowIndex == data.submatriz[0].length - 1 ? 'Oferta' : `Destino ${rowIndex + 1}`} </span>
+                            </div>
+                        ))}
+                    </div>
                     <div>
-
                         {data.submatriz.map((row, rowIndex) => (
                             <div key={rowIndex} className="flex">
                                 <span className="grid place-items-center bg-cyan-950     w-24 p-2 overflow-auto">{rowIndex == data.submatriz.length - 1 ? 'Demanda' : `Origen ${rowIndex + 1}`}</span>
@@ -198,21 +220,32 @@ export default function Vogel() {
             <h3>
                 Solución:
             </h3>
-            <h2>
-                La respuesta es: {info.totalCost && (info.totalCost)}
-            </h2>
-            <div className="flex gap-6">
-                {
-                    info.totalCost && (
-                        info.allocations.map((a, b) => (
-                            <div key={b} className="border rounded p-2">
-                                Cantidad = {a.amount}
-                                <br />
-                                Costo = {a.cost}
-                                <br />
-                            </div>
-                        ))
-                    )
+            <div>
+                {nao ?
+                    <div>
+                        <h2>
+                            Costo total: {info.totalCost && (info.totalCost)}
+                        </h2>
+                        <div className="flex gap-6">
+                            {
+                                info.totalCost && (
+                                    info.allocations.map((a, b) => (
+                                        <div key={b} className="border rounded p-2">
+                                            Cantidad = {a.amount}
+                                            <br />
+                                            Costo = {a.cost}
+                                            <br />
+                                        </div>
+                                    ))
+                                )
+                            }
+                        </div>
+                    </div>
+                    : <div className="text-red-400 font-semibold">
+                        - Verifique que todos los datos están completos.
+                        <br />
+                        - Verifique que la oferta es igual a la demanda.
+                    </div>
                 }
             </div>
         </div>
