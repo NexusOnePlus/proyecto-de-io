@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState  } from "react";
+import { useEffect, useState } from "react";
 import { useData } from "../context"
 
 
@@ -11,6 +11,7 @@ const solucion = (grid, supply, demand) => {
     let n = grid.length;
     let m = grid[0].length;
     let ans = 0;
+    let allocations = []; // Lista para guardar las asignaciones
 
     // Función auxiliar para encontrar la diferencia de filas y columnas
     function findDiff(grid) {
@@ -56,6 +57,8 @@ const solucion = (grid, supply, demand) => {
                             ans += mini2 * mini1;
                             supply[ind] -= mini2;
                             demand[ind2] -= mini2;
+                            // Guardar la asignación
+                            allocations.push({ supply: ind, demand: ind2, amount: mini2, cost: mini1 });
 
                             if (demand[ind2] === 0) {
                                 for (let r = 0; r < n; r++) {
@@ -84,6 +87,8 @@ const solucion = (grid, supply, demand) => {
                             ans += mini2 * mini1;
                             supply[ind2] -= mini2;
                             demand[ind] -= mini2;
+                            // Guardar la asignación
+                            allocations.push({ supply: ind2, demand: ind, amount: mini2, cost: mini1 });
 
                             if (demand[ind] === 0) {
                                 for (let r = 0; r < n; r++) {
@@ -100,43 +105,48 @@ const solucion = (grid, supply, demand) => {
             }
         }
     }
-
-    return ans
+    console.log(ans);
+    console.log(allocations)
+    return {
+        totalCost: ans,
+        allocations: allocations
+    };
 };
 
 
+
 export default function Vogel() {
-    const {data, setData } = useData()
+    const { data, setData } = useData()
     const [legal, setLegal] = useState(false);
     const [info, setInfo] = useState({})
 
     useEffect(() => {
         let condition = true;
-            setLegal(true)
+        setLegal(true)
     }, [])
 
     useEffect(() => {
-       if(legal) {
-        console.log(data.submatriz);
+        if (legal) {
             let supply = []
-        let demand = []
-        let grid = data.submatriz.map((a,b) => {
-            if (b == (data.submatriz.length-1)) {
-                a.map((c) => {
-                    if (c != null) {
-                        demand.push(parseFloat(c));
-                    }
-                })
-            } else {
-                supply.push(parseFloat(a[a.length-1]))
-                console.log(a)
-                return (((a.slice(0,a.length-1)).map((a) =>  parseFloat(a))))
-            }
-        })
-        grid.pop()
-        setInfo({res: solucion(grid, supply, demand)})
-       } 
-    },[legal])
+            let demand = []
+            let grid = data.submatriz.map((a, b) => {
+                if (b == (data.submatriz.length - 1)) {
+                    a.map((c) => {
+                        if (c != '') {
+                            demand.push(parseFloat(c));
+                        }
+                    })
+                } else {
+                    supply.push(parseFloat(a[a.length - 1]))
+                    console.log(a)
+                    return (((a.slice(0, a.length - 1)).map((a) => parseFloat(a))))
+                }
+            })
+            grid.pop()
+            let hey = solucion(grid, supply, demand)
+            setInfo(hey)
+        }
+    }, [legal])
 
     return (<div className="mx-10 h-[calc(100vh-44px)] py-20 overflow-y-auto">
         <div className="min-h-64 grid place-items-start gap-3">
@@ -146,17 +156,65 @@ export default function Vogel() {
                 Descripión:
             </h2>
             <h3 >
-                Una solución que consiste en tratar a la funcion Z como si fuera una de las restricciones originales.
+                El método de aproximación de Vogel es un método heurístico de resolucion de problemas de transporte
             </h3>
             <h3>
-                La solución BF (solución básica factible) si y solo si todos los coeficientes de la fila 0 son negativos.
+                Capaz de alcanzar una solucion basica no artificial de
+                inicio, este modelo requiere de la realizacion de un
+                numero generalmente mayor de iteraciones que los
+                demas metodos heurísticos existentes.
+                <br />
+                Sin embargo produce mejores resultados iniciales que los
+                mismos.
             </h3>
+            <h3>
+                Datos:
+            </h3>
+            <div>
+
+                <div className="rounded-md border-2  border-slate-600 bg-slate-600 p-[0.5px] w-full">
+                    <div className="flex">
+                        <span className="w-24"></span>
+                    {data.submatriz[0].map((row, rowIndex) => (
+                        <div key={rowIndex} className="flex">
+                            <span className={` grid place-items-center border-slate-500 w-24 p-2 overflow-auto`}> {rowIndex == data.submatriz[0].length-1 ? 'Oferta' : `Destino ${rowIndex+1}`} </span>
+                        </div>
+                    ))}
+                </div>
+                    <div>
+
+                        {data.submatriz.map((row, rowIndex) => (
+                            <div key={rowIndex} className="flex">
+                                <span className="grid place-items-center bg-cyan-950     w-24 p-2 overflow-auto">{rowIndex == data.submatriz.length - 1 ? 'Demanda' : `Origen ${rowIndex + 1}`}</span>
+                                {row.map((cell, cellIndex) => (
+                                    <span key={cellIndex} className={`bg-slate-700 grid place-items-center border-slate-500 w-24 p-2 overflow-auto`}>{cell} </span>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+            </div>
             <h3>
                 Solución:
             </h3>
             <h2>
-                La respuesta es: {info.res}
+                La respuesta es: {info.totalCost && (info.totalCost)}
             </h2>
+            <div className="flex gap-6">
+                {
+                    info.totalCost && (
+                        info.allocations.map((a, b) => (
+                            <div key={b} className="border rounded p-2">
+                                Cantidad = {a.amount}
+                                <br />
+                                Costo = {a.cost}
+                                <br />
+                            </div>
+                        ))
+                    )
+                }
+            </div>
         </div>
 
     </div>

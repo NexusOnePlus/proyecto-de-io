@@ -8,7 +8,7 @@ export default function Rutas() {
     const { data, setData } = useData()
     useEffect(() => {
         if (data.submatriz.length !== data.restricciones+1 || data.submatriz[0].length !== data.variables+1) {
-            setData({ ...data, submatriz: Array.from({ length: data.restricciones+1 }, () => Array.from({ length: data.variables+1 } )) })
+            setData({ ...data, submatriz: Array.from({ length: data.restricciones+1 }, () => Array.from({ length: data.variables+1 }, (v,i) => i = '' )) })
         }
     }, [data.variables, data.restricciones])
 
