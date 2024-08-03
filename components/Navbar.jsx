@@ -18,10 +18,13 @@ export default function Navbar() {
           <Link href='/lineal'> Programacion lineal </Link>
         </li>
         <li>
-          <Link href='/enteros'> Programacion entera </Link>
+          <Link href='/enteros'> Entera </Link>
         </li>
         <li>
           <Link href='/rutas'> Transporte </Link>
+        </li>
+        <li>
+          <Link href='/asignacion'> Asignacion </Link>
         </li>
         <li>
           <Link href='/grafos'> Grafos </Link>

@@ -15,10 +15,10 @@ export default function Sidebar() {
 
                 <ul className="grid gap-5">
                     <li className={`w-48 h-12 ${test[pathname == '/rutas' ? 'si' : 'no']} hover:bg-white hover:text-black rounded grid place-items-center active:text-cyan-40`}>
-                        <Link href='/rutas/'> Introducción </Link>
+                        <Link href='/asignacion/'> Introducción </Link>
                     </li>
                     <li className={`w-48 grid h-12 ${test[pathname == '/rutas/vogel' ? 'si' : 'no']} hover:bg-white hover:text-black rounded grid place-items-center`}>
-                        <Link href='/rutas/vogel' > Vogel </Link>
+                        <Link href='/asignacion/hungaro' > Hungaro </Link>
                     </li>
                 </ul>
             </nav>
