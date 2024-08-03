@@ -129,13 +129,14 @@ function Ramas() {
             })
         })
         let log = simplex(temp);
-        setInfo(log);
-
-        let [rama, ligas] = ramas(log);
-        console.log(rama);
-        setNodes(rama)
-        setEdges(ligas)
-        setRenders(true)
+        if (log != false) {
+            setInfo(log);
+            let [rama, ligas] = ramas(log);
+            console.log(rama);
+            setNodes(rama)
+            setEdges(ligas)
+            setRenders(true)
+        }
     }, []);
 
     useEffect(() => {
@@ -155,42 +156,53 @@ function Ramas() {
             <h3 >
                 Una solución.
             </h3>
-            <div>
-                <h2 className="text-2xl font-semibold"> Pre-solucion básica: </h2>
-                <h3>Los resultados serían los siguientes:
-                    {Object.entries(info).map(([variable, value]) => (
-                        <div key={variable}>
-                            {variable} = {value}
+            {renders ?(
+                <div>
+
+                    <div>
+                        <h2 className="text-2xl font-semibold"> Pre-solucion básica: </h2>
+                        <h3>Los resultados serían los siguientes:
+                            {Object.entries(info).map(([variable, value]) => (
+                                <div key={variable}>
+                                    {variable} = {value}
+                                </div>
+                            ))}</h3>
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-semibold"> Solucion: </h2>
+                        <div className='h-[800px] w-[800px] border border-dashed border-white rounded-md'>
+                            <ReactFlow
+                                nodes={nodes}
+                                edges={edges}
+                                onNodesChange={onNodesChange}
+                                onEdgesChange={onEdgesChange}
+                                colorMode='light'
+                                fitView
+                            >
+                                <Panel position="top-right grid">
+                                    <button onClick={() => onLayout('TB')}>Vertical</button>
+                                    <button onClick={() => onLayout('LR')}>Horizontal</button>
+                                </Panel>
+                            </ReactFlow>
                         </div>
-                    ))}</h3>
-            </div>
-            <div>
-                <h2 className="text-2xl font-semibold"> Solucion: </h2>
-                <div className='h-[800px] w-[800px] border border-dashed border-white rounded-md'>
-                    <ReactFlow
-                        nodes={nodes}
-                        edges={edges}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        colorMode='light'
-                        fitView
-                    >
-                        <Panel position="top-right grid">
-                            <button onClick={() => onLayout('TB')}>Vertical</button>
-                            <button onClick={() => onLayout('LR')}>Horizontal</button>
-                        </Panel>
-                    </ReactFlow>
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-semibold"> Solucion óptima: </h2>
+                        <h3>Los resultados serían los siguientes:
+                            {Object.entries(info).map(([variable, value]) => (
+                                <div key={variable}>
+                                    {variable} = {value}
+                                </div>
+                            ))}</h3>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <h2 className="text-2xl font-semibold"> Solucion óptima: </h2>
-                <h3>Los resultados serían los siguientes:
-                    {Object.entries(info).map(([variable, value]) => (
-                        <div key={variable}>
-                            {variable} = {value}
-                        </div>
-                    ))}</h3>
-            </div>
+            )
+        :   (
+            <h3 className='text-red-400 font-semibold'>
+                Complete los datos correctamente.
+            </h3>
+        )
+        }
         </div>
     </div>
     )

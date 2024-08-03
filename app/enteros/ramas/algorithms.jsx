@@ -112,6 +112,9 @@ export const simplex = (matriz) => {
             }
         }
     }
+    if (typeof lado == 'undefined') {
+        return false
+    }
     let log = structuredClone(tabla)
         log = log.map((fila, i) => {
             let colita = fila[fila.length - 1];
