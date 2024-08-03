@@ -95,7 +95,7 @@ const ramas = (info) => {
 }
 
 
-function Ramas() {
+function Rama() {
     const { fitView } = useReactFlow();
     const { data, setData } = useData();
     const [info, setInfo] = useState({});
@@ -114,7 +114,7 @@ function Ramas() {
                 fitView();
             });
         },
-        [nodes, edges],
+        [nodes, edges,setNodes,setEdges],
     );
 
 
@@ -208,10 +208,11 @@ function Ramas() {
     )
 }
 
-export default function () {
+
+export default function Ramas() {
     return (
         <ReactFlowProvider>
-            <Ramas />
+            <Rama />
         </ReactFlowProvider>
     );
 }

@@ -17,7 +17,7 @@ export const AppWrapper = ({ children }) => {
         tipoDeFuncion: 'max',
         submatriz: []
     }
-    const [data, setData] = useLocalStorage('info', initial)
+    const [data, setData] = useLocalStorage('ramas', initial)
     const [isClient, setIsClient] = useState(false)
 
     useEffect(() => {
