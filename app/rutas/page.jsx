@@ -23,10 +23,10 @@ export default function Rutas() {
             <h1 className="font-bold text-5xl">Transporte
             </h1>
         </div>
-        <div className="grid grid-cols-[2fr_3fr_3fr] place-items-start p-2">
+        <div className="grid grid-cols-[1fr_1fr] place-items-start p-2">
             <div className="grid grid-cols-2 place-items-center w-full h-full">
                 <div>
-                    <h2 className="text-2xl font-semibold"> Fuentes </h2>
+                    <h2 className="text-2xl font-semibold"> Destinos </h2>
                     <h2 className="text-5xl"> {data.variables} </h2>
                 </div>
                 <div className="grid grid-cols-2 place-items-center gap-5">
@@ -40,7 +40,7 @@ export default function Rutas() {
             </div>
             <div className="grid grid-cols-2 place-items-center w-full h-full">
                 <div>
-                    <h2 className="text-2xl font-semibold"> Destinos </h2>
+                    <h2 className="text-2xl font-semibold"> Fuentes </h2>
                     <h2 className="text-5xl"> {data.restricciones} </h2>
                 </div>
                 <div className="grid grid-cols-2 place-items-center gap-5">
@@ -59,7 +59,7 @@ export default function Rutas() {
                 <div className={`flex content-center p-2 gap-2 `}>
                     <div className="w-[100px] grid place-items-center"> D/F</div>
                     {[...Array(data.variables+1)].map((e, i) => (
-                        <h3 key={i} className="bg-neutral-900 grid place-items-center min-w-20 h-8 border-2 border-white rounded">{i != data.variables ? `Fuente ${i + 1}` : `Oferta`}</h3>
+                        <h3 key={i} className="bg-neutral-900 grid place-items-center min-w-20 h-8 border-2 border-white rounded">{i != data.variables ? `Destino ${i + 1}` : `Oferta`}</h3>
                     ))
                     }
                 </div>
@@ -67,7 +67,7 @@ export default function Rutas() {
                     {
                         data.submatriz.map((a, b) => (
                             <div className="text-white flex gap-2 content-center" key={b}>
-                                <div className="w-[100px] border-2 border-white rounded grid place-items-center"> {b != data.restricciones ? `Destino ${b+1}` : `Demanda`} </div>
+                                <div className="w-[100px] border-2 border-white rounded grid place-items-center"> {b != data.restricciones ? `Fuente ${b+1}` : `Demanda`} </div>
                                 {
                                     a.map((d, i) => { 
                                         return b == data.restricciones && i == data.variables  ? null

@@ -13,8 +13,6 @@ export const AppWrapper = ({ children }) => {
     const initial = {
         variables: 2,
         restricciones: 2,
-        funcion: [],
-        tipoDeFuncion: 'max',
         submatriz: []
     }
     const [data, setData] = useLocalStorage('info', initial)
