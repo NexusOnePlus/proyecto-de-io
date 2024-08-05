@@ -13,11 +13,9 @@ export const AppWrapper = ({ children }) => {
     const initial = {
         variables: 2,
         restricciones: 2,
-        funcion: [],
-        tipoDeFuncion: 'max',
         submatriz: []
     }
-    const [data, setData] = useLocalStorage('hungaro', initial)
+    const [data, setData] = useLocalStorage('hungar', initial)
     const [isClient, setIsClient] = useState(false)
 
     useEffect(() => {

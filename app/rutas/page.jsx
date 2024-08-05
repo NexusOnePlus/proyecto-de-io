@@ -24,7 +24,7 @@ export default function Rutas() {
             </h1>
         </div>
         <div className="grid grid-cols-[1fr_1fr] place-items-start p-2">
-            <div className="grid grid-cols-2 place-items-center w-full h-full">
+            <div className="grid grid-cols-2 place-items-start w-full h-full">
                 <div>
                     <h2 className="text-2xl font-semibold"> Destinos </h2>
                     <h2 className="text-5xl"> {data.variables} </h2>
@@ -38,7 +38,7 @@ export default function Rutas() {
                     </div>
                 </div>
             </div>
-            <div className="grid grid-cols-2 place-items-center w-full h-full">
+            <div className="grid grid-cols-2 place-items-start w-full h-full">
                 <div>
                     <h2 className="text-2xl font-semibold"> Fuentes </h2>
                     <h2 className="text-5xl"> {data.restricciones} </h2>

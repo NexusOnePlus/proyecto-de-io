@@ -14,10 +14,10 @@ export default function Sidebar() {
                 <h2 className="font-bold text-3xl mb-7 grid place-items-center bg-[#1d1b31] rounded h-14"> Métodos </h2>
 
                 <ul className="grid gap-5">
-                    <li className={`w-48 h-12 ${test[pathname == '/rutas' ? 'si' : 'no']} hover:bg-white hover:text-black rounded grid place-items-center active:text-cyan-40`}>
+                    <li className={`w-48 h-12 ${test[pathname == '/asignacion' ? 'si' : 'no']} hover:bg-white hover:text-black rounded grid place-items-center active:text-cyan-40`}>
                         <Link href='/asignacion/'> Introducción </Link>
                     </li>
-                    <li className={`w-48 grid h-12 ${test[pathname == '/rutas/vogel' ? 'si' : 'no']} hover:bg-white hover:text-black rounded grid place-items-center`}>
+                    <li className={`w-48 grid h-12 ${test[pathname == '/asignacion/hungaro' ? 'si' : 'no']} hover:bg-white hover:text-black rounded grid place-items-center`}>
                         <Link href='/asignacion/hungaro' > Hungaro </Link>
                     </li>
                 </ul>

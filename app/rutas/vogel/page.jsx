@@ -190,7 +190,7 @@ export default function Vogel() {
                 Sin embargo produce mejores resultados iniciales que los
                 mismos.
             </h3>
-            <h3>
+            <h3 className="text-2xl font-bold">
                 Datos:
             </h3>
             <div>
@@ -217,7 +217,7 @@ export default function Vogel() {
                 </div>
 
             </div>
-            <h3>
+            <h3 className="text-2xl font-bold">
                 Solución:
             </h3>
             <div>
