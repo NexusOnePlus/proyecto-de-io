@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react';
-import { simplex } from './algorithms'
+import { simplex, granM } from './algorithms'
 import { useData } from "../context"
 import {
     ReactFlow, useReactFlow, ReactFlowProvider,
@@ -41,7 +41,22 @@ const getLayoutedElements = (nodes, edges, options) => {
 };
 
 
-const ramas = (info) => {
+const destructurar = (a) => {
+    let listas = []
+    let z;
+    Object.entries(a).map(([variable, value]) => {
+        if (variable == 'Z') {
+            z = value
+        } else {
+            listas.push(value)
+        }
+    })
+    return [listas, z]
+}
+
+const ramas = (info, matrix, nuevosSigno) => {
+    console.log("matriz: ", matrix);
+    console.log("signos: ", nuevosSigno);
     let variables = []
     let z;
     let ind = 1
@@ -54,43 +69,121 @@ const ramas = (info) => {
     })
     let pasos = []
     let conexiones = []
-    const bucle = (data, z, id) => {
-        console.log('data: ', data, ' Z: ', z, ' id: ', id)
-        pasos.push(
-            {
-                id: `${ind}`, position: { x: id * 10, y: id * 10 }, data: {
-                    label: `${data.map((a, b) => {
-                        return `X${b + 1}: ${a} `
-                    })
-                        } Z: ${z}`
-                }, style: { color: 'white', background: 'black', borderColor: 'white' }
-            },
-        )
-        conexiones.push(
-            {
-                id: `${Math.random()}`, source: `${id}`, target: `${ind}`
+    const bucle = (data, z, id, matriz, nuevosSignos, sen) => {
+        // console.log('data: ', data, ' Z: ', z, ' id: ', id)
+        if (!sen) {
+            pasos.push(
+                {
+                    id: `${ind}`, position: { x: id * 10, y: id * 10 }, data: {
+                        label: `Solucion no factible`
+                    }, style: { color: 'white', background: 'black', borderColor: 'white' }
+                },
+            )
+            conexiones.push(
+                {
+                    id: `${Math.random()}`, source: `${id}`, target: `${ind}`
+                }
+            )
+            let mid = ind;
+            ind++;
+        } else {
+
+            pasos.push(
+                {
+                    id: `${ind}`, position: { x: id * 10, y: id * 10 }, data: {
+                        label: `${data.map((a, b) => {
+                            return `X${b + 1}: ${a} `
+                        })
+                            } Z: ${z}`
+                    }, style: { color: 'white', background: 'black', borderColor: 'white' }
+                },
+            )
+            conexiones.push(
+                {
+                    id: `${Math.random()}`, source: `${id}`, target: `${ind}`
+                }
+            )
+            let mid = ind;
+            ind++;
+            id++;
+            let i = 0;
+            let seguir = true
+            while (seguir && data.length != i) {
+                if (!Number.isInteger(data[i])) {
+                    let temp = [...data]
+                    let tempMin = structuredClone(matriz)
+                    let tempMax = structuredClone(matriz)
+                    let nuevosSignosMin = structuredClone(nuevosSignos)
+                    nuevosSignosMin.push('<=')
+                    let size = temp.length;
+                    let menor = Math.floor(data[i])
+                    let less = []
+                    for (let j = 0; j < size; j++) {
+                        if (i == j) {
+                            less.push(1)
+                        } else {
+                            less.push(0)
+                        }
+                    }
+                    less.push(menor)
+                    tempMin.push(less)
+                    console.log("anstempMin: ", temp)
+                    console.log('tempmin: ', tempMin)
+                    console.log('signtempmin: ', nuevosSignosMin)
+                    let factMin = granM(tempMin, nuevosSignosMin, size, tempMin.length - 1)
+                    if (factMin != false) {
+
+                        console.log("nuevoMin: ", factMin)
+                        let [listaMin, zMin] = destructurar(factMin)
+                        zMin = parseFloat(zMin);
+                        listaMin = listaMin.map((a) => parseFloat(a))
+                        console.log("Lista Min: ", listaMin)
+                        console.log("Z Min: ", zMin)
+                        // temp[i] = Math.floor(data[i])   
+                        bucle(listaMin, zMin, mid, tempMin, nuevosSignosMin, true)
+                    } else {
+                        bucle([0,0], 0, mid, [[0]], '!=', false)
+                    }
+
+                    // nuevosSignos.push('>=')
+                    // temp[i] = Math.ceil(data[i])                
+                    let nuevosSignosMax = structuredClone(nuevosSignos)
+                    nuevosSignosMax.push('>=')
+                    let mayor = Math.ceil(data[i])
+                    let more = []
+                    for (let j = 0; j < size; j++) {
+                        if (i == j) {
+                            more.push(1)
+                        } else {
+                            more.push(0)
+                        }
+                    }
+                    more.push(mayor)
+                    tempMax.push(more)
+                    console.log("anstempMax: ", temp)
+                    console.log('tempmax: ', tempMax)
+                    console.log('signtempmax: ', nuevosSignosMax)
+                    let factMax = granM(tempMax, nuevosSignosMax, size, tempMax.length - 1)
+                    if (factMax != false) {
+                        console.log("nuevoMin: ", factMax)
+                        let [listaMax, zMax] = destructurar(factMax)
+                        zMax = parseFloat(zMax);
+                        listaMax = listaMax.map((a) => parseFloat(a))
+                        console.log("Lista Max: ", listaMax)
+                        console.log("Z Max: ", zMax)
+                        bucle(listaMax, zMax, mid, tempMax, nuevosSignosMax, true)
+                    } else {
+                        bucle([0,0], 0, mid, [[0]], '!=', false)
+                    }
+                    seguir = false;
+                }
+                i++;
             }
-        )
-        let mid = ind;
-        ind++;
-        id++;
-        let i = 0;
-        let seguir = true
-        while (seguir && data.length != i) {
-            if (!Number.isInteger(data[i])) {
-                let temp = [...data]
-                temp[i] = Math.floor(data[i])
-                bucle(temp, z, mid)
-                temp[i] = Math.ceil(data[i])
-                bucle(temp, z, mid)
-                seguir = false;
-            }
-            i++;
         }
     }
 
-    console.log(variables)
-    bucle(variables, z, 0);
+    // console.log(variables)
+    bucle(variables, z, 0, matrix, nuevosSigno, true);
     return [pasos, conexiones]
 }
 
@@ -102,9 +195,10 @@ function Rama() {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [renders, setRenders] = useState(false)
+    const [factible, setFactible] = useState(false);
     const onLayout = useCallback(
         (direction) => {
-            console.log(nodes);
+            // console.log(nodes);
             const layouted = getLayoutedElements(nodes, edges, { direction });
 
             setNodes([...layouted.nodes]);
@@ -114,7 +208,7 @@ function Rama() {
                 fitView();
             });
         },
-        [nodes, edges,setNodes,setEdges],
+        [nodes, edges, setNodes, setEdges],
     );
 
 
@@ -128,14 +222,47 @@ function Rama() {
                 return c
             })
         })
-        let log = simplex(temp);
-        if (log != false) {
-            setInfo(log);
-            let [rama, ligas] = ramas(log);
-            console.log(rama);
-            setNodes(rama)
-            setEdges(ligas)
+        // let log = simplex(temp);
+        const nuevosSignos = [];
+
+        let temporal = [];
+        temp.forEach((fila, index) => {
+            let nuevaFila = fila.slice(0, -2).concat(fila.slice(-1)).map(celda => {
+                const parsed = parseInt(celda, 10);
+                return isNaN(parsed) ? 0 : parsed;
+            });
+            if (index == 0) {
+                nuevaFila = nuevaFila.map((a) => {
+                    return -a;
+                })
+            }
+            temporal.push(nuevaFila);
+            if (index == 0) {
+                nuevosSignos.push('=')
+            } else {
+                nuevosSignos.push(fila[fila.length - 2]);
+            }
+        });
+
+        let notlog = granM(temporal, nuevosSignos, data.variables, data.restricciones);
+        // console.log("m", notlog)
+        if (notlog != false) {
+            setInfo(notlog);
+            // let [rama, ligas] = ramas(log);
+            let [branch, lines] = ramas(notlog, temporal, nuevosSignos)
+            // console.log("branch", branch);
+            setNodes(branch)
+            setEdges(lines)
             setRenders(true)
+            setFactible(true)
+        } else {
+            setNodes([{
+                id: '0', position: { x: 0, y: 0 }, data: {
+                    label: 'No factible'
+                }, style: { color: 'white', background: 'black', borderColor: 'white' }
+            }])
+            setRenders(true);
+            setFactible(false);
         }
     }, []);
 
@@ -156,17 +283,22 @@ function Rama() {
             <h3 >
                 Una solución.
             </h3>
-            {renders ?(
+            {renders ? (
                 <div>
 
                     <div>
                         <h2 className="text-2xl font-semibold"> Pre-solucion básica: </h2>
-                        <h3>Los resultados serían los siguientes:
-                            {Object.entries(info).map(([variable, value]) => (
-                                <div key={variable}>
-                                    {variable} = {value}
-                                </div>
-                            ))}</h3>
+                        {factible
+                            ?
+                            <h3>Los resultados serían los siguientes:
+                                {Object.entries(info).map(([variable, value]) => (
+                                    <div key={variable}>
+                                        {variable} = {value}
+                                    </div>
+                                ))}</h3>
+                            :
+                            <h3>Solución no factible</h3>
+                        }
                     </div>
                     <div>
                         <h2 className="text-2xl font-semibold"> Solucion: </h2>
@@ -187,22 +319,30 @@ function Rama() {
                         </div>
                     </div>
                     <div>
-                        <h2 className="text-2xl font-semibold"> Solucion óptima: </h2>
-                        <h3>Los resultados serían los siguientes:
-                            {Object.entries(info).map(([variable, value]) => (
-                                <div key={variable}>
-                                    {variable} = {value}
+                        {
+                            factible ?
+                                <div>
+                                    <h2 className="text-2xl font-semibold"> Solucion óptima: </h2>
+                                    <h3>Los resultados serían los siguientes:
+                                        {Object.entries(info).map(([variable, value]) => (
+                                            <div key={variable}>
+                                                {variable} = {value}
+                                            </div>
+                                        ))}</h3>
                                 </div>
-                            ))}</h3>
+                                : <h3>
+                                    Solución no factible
+                                </h3>
+                        }
                     </div>
                 </div>
             )
-        :   (
-            <h3 className='text-red-400 font-semibold'>
-                Complete los datos correctamente.
-            </h3>
-        )
-        }
+                : (
+                    <h3 className='text-red-400 font-semibold'>
+                        Complete los datos correctamente.
+                    </h3>
+                )
+            }
         </div>
     </div>
     )
