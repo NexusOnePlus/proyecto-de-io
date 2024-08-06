@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react';
-import { simplex, granM } from './algorithms'
+import { granM } from './algorithms'
 import { useData } from "../context"
 import {
     ReactFlow, useReactFlow, ReactFlowProvider,
@@ -60,6 +60,8 @@ const ramas = (info, matrix, nuevosSigno) => {
     let variables = []
     let z;
     let ind = 1
+    let supremo = -Infinity;
+    let respuesta = {};
     Object.entries(info).map(([variable, value]) => {
         if (variable == 'Z') {
             z = value
@@ -71,6 +73,8 @@ const ramas = (info, matrix, nuevosSigno) => {
     let conexiones = []
     const bucle = (data, z, id, matriz, nuevosSignos, sen) => {
         // console.log('data: ', data, ' Z: ', z, ' id: ', id)
+
+
         if (!sen) {
             pasos.push(
                 {
@@ -87,6 +91,24 @@ const ramas = (info, matrix, nuevosSigno) => {
             let mid = ind;
             ind++;
         } else {
+            
+            let k = 0;
+            let noEs = true;
+            while (noEs && (data.length != k)) {
+                if (!Number.isInteger(data[k])) {
+                    noEs = false;
+                }
+                k++;
+            }
+            if (noEs) {
+                if (z > supremo) {
+                    supremo = z;
+                    data.forEach((i, l) => {
+                            respuesta[`X${l+1}`] = i;
+                    });
+                    respuesta['Z'] = z;
+                }
+            }
 
             pasos.push(
                 {
@@ -182,9 +204,9 @@ const ramas = (info, matrix, nuevosSigno) => {
         }
     }
 
-    // console.log(variables)
+    console.log("final: ", respuesta)
     bucle(variables, z, 0, matrix, nuevosSigno, true);
-    return [pasos, conexiones]
+    return [pasos, conexiones, respuesta]
 }
 
 
@@ -192,6 +214,7 @@ function Rama() {
     const { fitView } = useReactFlow();
     const { data, setData } = useData();
     const [info, setInfo] = useState({});
+    const [res, setRes] = useState({});
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [renders, setRenders] = useState(false)
@@ -249,8 +272,9 @@ function Rama() {
         if (notlog != false) {
             setInfo(notlog);
             // let [rama, ligas] = ramas(log);
-            let [branch, lines] = ramas(notlog, temporal, nuevosSignos)
+            let [branch, lines, ans] = ramas(notlog, temporal, nuevosSignos)
             // console.log("branch", branch);
+            setRes(ans)
             setNodes(branch)
             setEdges(lines)
             setRenders(true)
@@ -324,7 +348,7 @@ function Rama() {
                                 <div>
                                     <h2 className="text-2xl font-semibold"> Solucion óptima: </h2>
                                     <h3>Los resultados serían los siguientes:
-                                        {Object.entries(info).map(([variable, value]) => (
+                                        {Object.entries(res).map(([variable, value]) => (
                                             <div key={variable}>
                                                 {variable} = {value}
                                             </div>

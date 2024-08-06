@@ -1,6 +1,6 @@
 'use client'
 
-const getVariableValues = (matrix, variables) => {
+export const getVariableValues = (matrix, variables) => {
     const headers = matrix[0];
     const variableValues = {};
     headers.forEach((header) => {
