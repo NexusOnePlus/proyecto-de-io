@@ -10,8 +10,8 @@ export default function HomePage() {
                 <h1 className='text-[68px] font-bold'>
                     Investigación Operativa
                 </h1>
-                <h3 className=' text-neutral-500 text-[20px]'>Programación Lineal, Programación entera y problemas de transporte</h3>
-                <h2 className='mt-4'>Hecho con Next.js y Tailwind </h2>
+                <h3 className=' text-neutral-500 text-[20px]'>Programación Lineal, Programación entera, problemas de transporte y asignación.</h3>
+                <h2 className='mt-4'>Hecho con Next.js y TailwindCSS </h2>
                 <h2 className='mt-10'>Integrantes del grupo </h2>
                 <div className='flex gap-7'>
                     <Tarjeta name='Samuel Aquima'/>
